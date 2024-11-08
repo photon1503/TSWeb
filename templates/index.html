@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,6 +10,25 @@
     .sidebar {
       height: 100vh;
       overflow-y: auto;
+      resize: horizontal;
+      overflow: auto;
+      min-width: 200px;
+      max-width: 400px;
+      position: relative;
+    }
+
+    .resizer {
+      width: 5px;
+      height: 100%;
+      background: #ddd;
+      cursor: ew-resize;
+      position: absolute;
+      right: 0;
+      top: 0;
+    }
+
+    .collapse-toggle {
+      cursor: pointer;
     }
   </style>
   <script>
@@ -34,13 +54,10 @@
           document.getElementById('project-enablegrader').innerText = data.project.enablegrader ? 'True' : 'False';
           document.getElementById('project-ismosaic').innerText = data.project.isMosaic ? 'True' : 'False';
           document.getElementById('project-flatshandling').innerText = data.project.flatsHandling;
-
-
         });
     }
 
     function showTargetDetails(targetId) {
-
       // Hide the project details
       document.getElementById('project').style.display = 'none';
       document.getElementById('target').style.display = 'block';
@@ -62,8 +79,7 @@
             const row = document.createElement('tr');
             row.innerHTML = `
               <td class="px-4 py-2">${plan.exposureTemplateId}</td>
-             <td class="px-4 py-2">${plan.exposure === -1 ? '(Template)' : plan.exposure}</td>
-         
+              <td class="px-4 py-2">${plan.exposure === -1 ? '(Template)' : plan.exposure}</td>
               <td class="px-4 py-2">${plan.desired}</td>
               <td class="px-4 py-2">${plan.accepted}</td>
               <td class="px-4 py-2">${plan.acquired}</td>
@@ -73,37 +89,79 @@
           });
         });
     }
+
+    function toggleTargets(projectId) {
+      const targetList = document.getElementById(`targets-${projectId}`);
+      if (targetList) {
+        if (targetList.style.display === 'none') {
+          targetList.style.display = 'block';
+        } else {
+          targetList.style.display = 'none';
+        }
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+      const resizer = document.querySelector('.resizer');
+      const sidebar = document.querySelector('.sidebar');
+      let isResizing = false;
+
+      resizer.addEventListener('mousedown', function (e) {
+        isResizing = true;
+        document.body.style.cursor = 'ew-resize';
+      });
+
+      document.addEventListener('mousemove', function (e) {
+        if (!isResizing) return;
+        const newWidth = e.clientX - sidebar.getBoundingClientRect().left;
+        if (newWidth >= 200 && newWidth <= 400) {
+          sidebar.style.width = `${newWidth}px`;
+        }
+      });
+
+      document.addEventListener('mouseup', function () {
+        isResizing = false;
+        document.body.style.cursor = 'default';
+      });
+    });
   </script>
 </head>
+
 <body>
   <div class="flex h-screen">
     <!-- Left Sidebar -->
-    <div class="bg-gray-200 p-4 w-64 border-r sidebar">
+    <div class="bg-gray-200 p-4 w-64 border-r sidebar relative">
+      <div class="resizer"></div>
       <h2 class="text-lg font-medium mb-4">Profiles</h2>
       <div class="space-y-2">
         <div class="bg-white p-2 rounded shadow">
           <h3 class="text-sm font-medium">Projects</h3>
           <ul class="space-y-1">
             {% for profile in profiles %}
-              <li>{{ profile.id }}</li>
-              {% for project in projects %}
-              <li>
+            <li>{{ profile.id }}</li>
+            {% for project in projects %}
+            <li>
+              <span class="collapse-toggle" onclick="toggleTargets({{ project.Id }})">
                 {% if project.state == 1 %}
-                  <a href="javascript:void(0);" onclick="showProjectDetails({{ project.Id }})" class="text-green-500 hover:underline">{{ project.name }}</a>
+                <a href="javascript:void(0);" onclick="showProjectDetails({{ project.Id }})"
+                  class="text-green-500 hover:underline">{{ project.name }}</a>
                 {% else %}
-                  <a href="javascript:void(0);" onclick="showProjectDetails({{ project.Id }})" class="text-red-500 hover:underline">{{ project.name }}</a>
+                <a href="javascript:void(0);" onclick="showProjectDetails({{ project.Id }})"
+                  class="text-red-500 hover:underline">{{ project.name }}</a>
                 {% endif %}
-                <ul class="ml-4">
-                  {% for target in targets %}
-                    {% if target.projectid == project.Id %}
-                      <li>
-                        <a href="javascript:void(0);" onclick="showTargetDetails({{ target.Id }})" class="text-blue-500 hover:underline">{{ target.name }}</a>
-                      </li>
-                    {% endif %}
-                  {% endfor %}
-                </ul>
-              </li>
-              {% endfor %}
+              </span>
+              <ul id="targets-{{ project.Id }}" class="ml-4" style="display: none;">
+                {% for target in targets %}
+                {% if target.projectid == project.Id %}
+                <li>
+                  <a href="javascript:void(0);" onclick="showTargetDetails({{ target.Id }})"
+                    class="text-blue-500 hover:underline">{{ target.name }}</a>
+                </li>
+                {% endif %}
+                {% endfor %}
+              </ul>
+            </li>
+            {% endfor %}
             {% endfor %}
           </ul>
         </div>
@@ -111,15 +169,11 @@
     </div>
 
     <!-- Main Content -->
-
-
-    <!-- project -->
     <div id="project" class="flex-1 p-8">
       <h1 class="text-2xl font-bold mb-4">Project: <span id="project-name">Select a project</span></h1>
- 
       <div class="grid grid-cols-2 gap-8">
         <div>
-          <h2 class="text-lg font-medium mb-2">Target</h2>
+          <h2 class="text-lg font-medium mb-2">Project Details</h2>
           <div class="space-y-2">
             <div><span class="font-medium">Name:</span> <span id="project-name">M 81 (1)</span></div>
             <div><span class="font-medium">Description:</span> <span id="project-description">M 81 (1)</span></div>
@@ -127,18 +181,19 @@
             <div><span class="font-medium">Priority:</span> <span id="project-priority">M 81 (1)</span></div>
             <div><span class="font-medium">Minimum Time:</span> <span id="project-minimumtime">M 81 (1)</span></div>
             <div><span class="font-medium">Minimum Altitude:</span> <span id="project-minimumalt">M 81 (1)</span></div>
-            <div><span class="font-medium">Use Custom Horizon:</span> <span id="project-usecustomhorizon">True</span></div>
+            <div><span class="font-medium">Use Custom Horizon:</span> <span id="project-usecustomhorizon">True</span>
+            </div>
             <div><span class="font-medium">Horizon Offset:</span> <span id="project-horizonoffset">5</span></div>
             <div><span class="font-medium">Meridian Window:</span> <span id="project-meridianwindow">30</span></div>
-            <div><span class="font-medium">Filter Switch Frequency:</span> <span id="project-filterswitchfrequency">40</span></div>
+            <div><span class="font-medium">Filter Switch Frequency:</span> <span
+                id="project-filterswitchfrequency">40</span></div>
             <div><span class="font-medium">Dither After Every:</span> <span id="project-ditherevery">50</span></div>
             <div><span class="font-medium">Enable Image Grader:</span> <span id="project-enablegrader">True</span></div>
             <div><span class="font-medium">Mosaic Project:</span> <span id="project-ismosaic">False</span></div>
             <div><span class="font-medium">Flats Handling:</span> <span id="project-flatshandling">Handling</span></div>
-     
-          </div>  
+          </div>
         </div>
-      </div>            
+      </div>
     </div>
 
     <!-- Target -->
@@ -155,7 +210,8 @@
               <span class="font-medium">Enabled:</span> <span id="target-enabled">True</span>
             </div>
             <div>
-              <span class="font-medium">Coordinates:</span> <span id="target-coordinates">09h 58m 14s, 69° 09' 39" J2000</span>
+              <span class="font-medium">Coordinates:</span> <span id="target-coordinates">09h 58m 14s, 69° 09' 39"
+                J2000</span>
             </div>
             <div>
               <span class="font-medium">Rotation:</span> <span id="target-rotation">225°</span>
@@ -166,28 +222,60 @@
           </div>
         </div>
       </div>
-        <div>
-          <h2 class="text-lg font-medium mb-2">Exposure Plans</h2>
-          <div class="overflow-x-auto">
-            <table class="w-full table-auto">
-              <thead>
-                <tr>
-                  <th class="px-4 py-2 text-left">Template</th>
-                  <th class="px-4 py-2 text-left">Exposure</th>
-                  <th class="px-4 py-2 text-left">Desired</th>
-                  <th class="px-4 py-2 text-left">Accepted</th>
-                  <th class="px-4 py-2 text-left">Acquired</th>
-                  <th class="px-4 py-2 text-left">%</th>
-                </tr>
-              </thead>
-              <tbody id="exposure-plans">
-              
-              </tbody>
-            </table>
-          </div>
-        
+
+      <div>
+        <h2 class="text-lg font-medium mb-2">Exposure Plans</h2>
+        <div class="overflow-x-auto">
+          <table class="w-full table-auto">
+            <thead>
+              <tr>
+                <th class="px-4 py-2 text-left">Template</th>
+                <th class="px-4 py-2 text-left">Exposure</th>
+                <th class="px-4 py-2 text-left">Desired</th>
+                <th class="px-4 py-2 text-left">Accepted</th>
+                <th class="px-4 py-2 text-left">Acquired</th>
+                <th class="px-4 py-2 text-left">%</th>
+              </tr>
+            </thead>
+            <tbody id="exposure-plans">
+              <tr>
+                <td class="px-4 py-2">L</td>
+                <td class="px-4 py-2">(Template)</td>
+                <td class="px-4 py-2">150</td>
+                <td class="px-4 py-2">0</td>
+                <td class="px-4 py-2">0</td>
+                <td class="px-4 py-2">0%</td>
+              </tr>
+              <tr>
+                <td class="px-4 py-2">R</td>
+                <td class="px-4 py-2">(Template)</td>
+                <td class="px-4 py-2">50</td>
+                <td class="px-4 py-2">0</td>
+                <td class="px-4 py-2">0</td>
+                <td class="px-4 py-2">0%</td>
+              </tr>
+              <tr>
+                <td class="px-4 py-2">G</td>
+                <td class="px-4 py-2">(Template)</td>
+                <td class="px-4 py-2">50</td>
+                <td class="px-4 py-2">0</td>
+                <td class="px-4 py-2">0</td>
+                <td class="px-4 py-2">0%</td>
+              </tr>
+              <tr>
+                <td class="px-4 py-2">B</td>
+                <td class="px-4 py-2">(Template)</td>
+                <td class="px-4 py-2">50</td>
+                <td class="px-4 py-2">0</td>
+                <td class="px-4 py-2">0</td>
+                <td class="px-4 py-2">0%</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
   </div>
 </body>
+
 </html>
