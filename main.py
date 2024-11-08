@@ -6,6 +6,7 @@ from DTOs.TSprofile import *
 from DTOs.TSproject import *
 from DTOs.TStarget import *
 from DTOs.TSexposureplan import *
+from DTOs.TSexposuretemplate import *
 
 app = Flask(__name__)
 
@@ -47,11 +48,14 @@ def get_target_details(target_id):
     exposure_plan_rows = c.fetchall()
     exposure_plans = [TSExposurePlan(*row) for row in exposure_plan_rows]
 
+    exposureTemplates = getExposureTemplate()
+
 
     conn.close()
 
     return {
         'target': target.__dict__,
+        'exposureTemplates': [template.__dict__ for template in exposureTemplates],
         'exposurePlans': [plan.__dict__ for plan in exposure_plans]
     }
 
@@ -83,6 +87,15 @@ def toggle_target_enabled(target_id):
     conn.close()
 
     return jsonify(success=True)
+
+def getExposureTemplate():
+    conn = db()
+    c = conn.cursor()
+    c.execute("SELECT * FROM exposuretemplate")
+    exposure_templates = [TSExposureTemplate(*row) for row in c.fetchall()]
+    conn.close()
+
+    return exposure_templates
 
 if __name__ == '__main__':
     app.run(debug=True)
