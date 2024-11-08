@@ -1,3 +1,6 @@
+from astropy.coordinates import SkyCoord
+from astropy import units as u
+
 class TSTarget:
     def __init__(self, Id, name, active, ra, dec, epochcode, rotation, roi, projectid, overrideExposureOrder):
         self.Id = Id
@@ -14,15 +17,11 @@ class TSTarget:
 
 
     def coordinates(self):
-        ra = self.ra
-        dec = self.dec
-        ra_h = int(ra / 15)
-        ra_m = int((ra - ra_h * 15) * 4)
-        ra_s = int((ra - ra_h * 15 - ra_m / 4) * 240)
-        dec_d = int(dec)
-        dec_m = int((dec - dec_d) * 60)
-        dec_s = int((dec - dec_d - dec_m / 60) * 3600)
-        return f'{ra_h:02d}h {ra_m:02d}m {ra_s:02d}s, {dec_d:02d}° {dec_m:02d}\' {dec_s:02d}" J2000'
+        coord = SkyCoord(ra=self.ra * u.hour, dec=self.dec * u.degree, frame='icrs')
+        ra_hms = coord.ra.hms
+        dec_dms = coord.dec.dms
+        return f'{int(ra_hms.h):02d}h {int(ra_hms.m):02d}m {ra_hms.s:05.2f}s, {int(dec_dms.d):02d}° {abs(int(dec_dms.m)):02d}\' {abs(dec_dms.s):04.1f}" J2000'
+
     
     def __str__(self):
         return f'Target(Id={self.Id}, name={self.name}, active={self.active}, ra={self.ra}, dec={self.dec}, epochcode={self.epochcode}, rotation={self.rotation}, roi={self.roi}, projectid={self.projectid}, overrideExposureOrder={self.overrideExposureOrder})'

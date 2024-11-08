@@ -5,10 +5,47 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Project Viewer</title>
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.16/dist/tailwind.min.css" rel="stylesheet">
+  <style>
+    .sidebar {
+      height: 100vh;
+      overflow-y: auto;
+    }
+  </style>
   <script>
     function showProjectDetails(projectId) {
+      // Show the project details
+      document.getElementById('project').style.display = 'block';
+      document.getElementById('target').style.display = 'none';
       // Fetch the project details using AJAX or fetch API
       fetch(`/project/${projectId}`)
+        .then(response => response.json())
+        .then(data => {
+          document.getElementById('project-name').innerText = data.project.name;
+          document.getElementById('project-description').innerText = data.project.description;
+          document.getElementById('project-state').innerText = data.project.state;
+          document.getElementById('project-priority').innerText = data.project.priority;
+          document.getElementById('project-minimumtime').innerText = data.project.minimumtime;
+          document.getElementById('project-minimumalt').innerText = data.project.minimumaltitude;
+          document.getElementById('project-usecustomhorizon').innerText = data.project.usecustomhorizon ? 'True' : 'False';
+          document.getElementById('project-horizonoffset').innerText = data.project.horizonoffset;
+          document.getElementById('project-meridianwindow').innerText = data.project.meridianwindow;
+          document.getElementById('project-filterswitchfrequency').innerText = data.project.filterswitchfrequency;
+          document.getElementById('project-ditherevery').innerText = data.project.ditherevery;
+          document.getElementById('project-enablegrader').innerText = data.project.enablegrader ? 'True' : 'False';
+          document.getElementById('project-ismosaic').innerText = data.project.isMosaic ? 'True' : 'False';
+          document.getElementById('project-flatshandling').innerText = data.project.flatsHandling;
+
+
+        });
+    }
+
+    function showTargetDetails(targetId) {
+
+      // Hide the project details
+      document.getElementById('project').style.display = 'none';
+      document.getElementById('target').style.display = 'block';
+      // Fetch the project details using AJAX or fetch API
+      fetch(`/target/${targetId}`)
         .then(response => response.json())
         .then(data => {
           // Update the target details
@@ -41,7 +78,7 @@
 <body>
   <div class="flex h-screen">
     <!-- Left Sidebar -->
-    <div class="bg-gray-200 p-4 w-64 border-r">
+    <div class="bg-gray-200 p-4 w-64 border-r sidebar">
       <h2 class="text-lg font-medium mb-4">Profiles</h2>
       <div class="space-y-2">
         <div class="bg-white p-2 rounded shadow">
@@ -56,6 +93,15 @@
                 {% else %}
                   <a href="javascript:void(0);" onclick="showProjectDetails({{ project.Id }})" class="text-red-500 hover:underline">{{ project.name }}</a>
                 {% endif %}
+                <ul class="ml-4">
+                  {% for target in targets %}
+                    {% if target.projectid == project.Id %}
+                      <li>
+                        <a href="javascript:void(0);" onclick="showTargetDetails({{ target.Id }})" class="text-blue-500 hover:underline">{{ target.name }}</a>
+                      </li>
+                    {% endif %}
+                  {% endfor %}
+                </ul>
               </li>
               {% endfor %}
             {% endfor %}
@@ -65,7 +111,38 @@
     </div>
 
     <!-- Main Content -->
-    <div class="flex-1 p-8">
+
+
+    <!-- project -->
+    <div id="project" class="flex-1 p-8">
+      <h1 class="text-2xl font-bold mb-4">Project: <span id="project-name">Select a project</span></h1>
+ 
+      <div class="grid grid-cols-2 gap-8">
+        <div>
+          <h2 class="text-lg font-medium mb-2">Target</h2>
+          <div class="space-y-2">
+            <div><span class="font-medium">Name:</span> <span id="project-name">M 81 (1)</span></div>
+            <div><span class="font-medium">Description:</span> <span id="project-description">M 81 (1)</span></div>
+            <div><span class="font-medium">State:</span> <span id="project-state">M 81 (1)</span></div>
+            <div><span class="font-medium">Priority:</span> <span id="project-priority">M 81 (1)</span></div>
+            <div><span class="font-medium">Minimum Time:</span> <span id="project-minimumtime">M 81 (1)</span></div>
+            <div><span class="font-medium">Minimum Altitude:</span> <span id="project-minimumalt">M 81 (1)</span></div>
+            <div><span class="font-medium">Use Custom Horizon:</span> <span id="project-usecustomhorizon">True</span></div>
+            <div><span class="font-medium">Horizon Offset:</span> <span id="project-horizonoffset">5</span></div>
+            <div><span class="font-medium">Meridian Window:</span> <span id="project-meridianwindow">30</span></div>
+            <div><span class="font-medium">Filter Switch Frequency:</span> <span id="project-filterswitchfrequency">40</span></div>
+            <div><span class="font-medium">Dither After Every:</span> <span id="project-ditherevery">50</span></div>
+            <div><span class="font-medium">Enable Image Grader:</span> <span id="project-enablegrader">True</span></div>
+            <div><span class="font-medium">Mosaic Project:</span> <span id="project-ismosaic">False</span></div>
+            <div><span class="font-medium">Flats Handling:</span> <span id="project-flatshandling">Handling</span></div>
+     
+          </div>  
+        </div>
+      </div>            
+    </div>
+
+    <!-- Target -->
+    <div id="target" class="flex-1 p-8">
       <h1 class="text-2xl font-bold mb-4">Target: <span id="target-name">M 81 (1)</span></h1>
       <div class="grid grid-cols-2 gap-8">
         <div>
