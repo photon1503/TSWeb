@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Project Viewer</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            padding: 20px;
+        }
+        table {
+            width: 100%;
+        }
+        th, td {
+            padding: 8px;
+            text-align: left;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1 class="mb-4">Project Viewer</h1>
+
+        <h2>Profile</h2>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Profile ID</th>
+                    <th>Enable Grade RMS</th>
+                    <th>Enable Grade Stars</th>
+                    <th>Enable Grade HFR</th>
+                    <th>Max Grading Sample Size</th>
+                    <th>RMS Pixel Threshold</th>
+                    <th>Detected Stars Sigma Factor</th>
+                    <th>HFR Sigma Factor</th>
+                    <th>Accept Improvement</th>
+                    <th>Exposure Throttle</th>
+                    <th>Park on Wait</th>
+                    <th>Enable Smart Plan Window</th>
+                    <th>Enable Synchronization</th>
+                    <th>Sync Wait Timeout</th>
+                    <th>Sync Action Timeout</th>
+                    <th>Sync Solve Rotate Timeout</th>
+                    <th>Enable Move Rejected</th>
+                    <th>Enable Grade FWHM</th>
+                    <th>Enable Grade Eccentricity</th>
+                    <th>FWHM Sigma Factor</th>
+                    <th>Eccentricity Sigma Factor</th>
+                    <th>Enable Delete Acquired Images With Target</th>
+                    <th>Sync Event Container Timeout</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for preference in profiles %}
+                <tr>
+                    <form method="post">
+                        <input type="hidden" name="id" value="{{ preference[0] }}">
+                        <input type="hidden" class="form-control" name="profileId" value="{{ preference[1] }}">
+                        <td><input type="checkbox" class="form-check-input" name="enableGradeRMS" {% if preference[2] %}checked{% endif %}></td>
+                        <td><input type="checkbox" class="form-check-input" name="enableGradeStars" {% if preference[3] %}checked{% endif %}></td>
+                        <td><input type="checkbox" class="form-check-input" name="enableGradeHFR" {% if preference[4] %}checked{% endif %}></td>
+                        <td><input type="text" class="form-control" name="maxGradingSampleSize" value="{{ preference[5] }}"></td>
+                        <td><input type="text" class="form-control" name="rmsPixelThreshold" value="{{ preference[6] }}"></td>
+                        <td><input type="text" class="form-control" name="detectedStarsSigmaFactor" value="{{ preference[7] }}"></td>
+                        <td><input type="text" class="form-control" name="hfrSigmaFactor" value="{{ preference[8] }}"></td>
+                        <td><input type="text" class="form-control" name="acceptimprovement" value="{{ preference[9] }}"></td>
+                        <td><input type="text" class="form-control" name="exposurethrottle" value="{{ preference[10] }}"></td>
+                        <td><input type="text" class="form-control" name="parkonwait" value="{{ preference[11] }}"></td>
+                        <td><input type="checkbox" class="form-check-input" name="enableSmartPlanWindow" {% if preference[12] %}checked{% endif %}></td>
+                        <td><input type="checkbox" class="form-check-input" name="enableSynchronization" {% if preference[13] %}checked{% endif %}></td>
+                        <td><input type="text" class="form-control" name="syncWaitTimeout" value="{{ preference[14] }}"></td>
+                        <td><input type="text" class="form-control" name="syncActionTimeout" value="{{ preference[15] }}"></td>
+                        <td><input type="text" class="form-control" name="syncSolveRotateTimeout" value="{{ preference[16] }}"></td>
+                        <td><input type="checkbox" class="form-check-input" name="enableMoveRejected" {% if preference[17] %}checked{% endif %}></td>
+                        <td><input type="checkbox" class="form-check-input" name="enableGradeFWHM" {% if preference[18] %}checked{% endif %}></td>
+                        <td><input type="checkbox" class="form-check-input" name="enableGradeEccentricity" {% if preference[19] %}checked{% endif %}></td>
+                        <td><input type="text" class="form-control" name="fwhmSigmaFactor" value="{{ preference[20] }}"></td>
+                        <td><input type="text" class="form-control" name="eccentricitySigmaFactor" value="{{ preference[21] }}"></td>
+                        <td><input type="checkbox" class="form-check-input" name="enableDeleteAcquiredImagesWithTarget" {% if preference[22] %}checked{% endif %}></td>
+                        <td><input type="text" class="form-control" name="syncEventContainerTimeout" value="{{ preference[23] }}"></td>
+                        <td><button type="submit" class="btn btn-primary">Update</button></td>
+                    </form>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <h2>Projects</h2>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+            
+                    <th>Name</th>
+                    <th>Description</th>
+                    <th>State</th>
+                    <th>Priority</th>
+                    <th>Create Date</th>
+                    <th>Active Date</th>
+                    <th>Inactive Date</th>
+                    <th>Minimum Time</th>
+                    <th>Minimum Altitude</th>
+                    <th>Use Custom Horizon</th>
+                    <th>Horizon Offset</th>
+                    <th>Meridian Window</th>
+                    <th>Filter Switch Frequency</th>
+                    <th>Dither Every</th>
+                    <th>Enable Grader</th>
+                    <th>Is Mosaic</th>
+                    <th>Flats Handling</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for project in projects %}
+                <tr>
+                    <form method="post">
+                        <input type="hidden" name="id" value="{{ project[0] }}">
+                        <input type="hidden" class="form-control" name="profileId" value="{{ project[1] }}">
+                        <td><input type="text" class="form-control" name="name" value="{{ project[2] }}"></td>
+                        <td><input type="text" class="form-control" name="description" value="{{ project[3] }}"></td>
+                        <td><input type="text" class="form-control" name="state" value="{{ project[4] }}"></td>
+                        <td><input type="text" class="form-control" name="priority" value="{{ project[5] }}"></td>
+                        <td><input type="text" class="form-control" name="createdate" value="{{ project[6] }}"></td>
+                        <td><input type="text" class="form-control" name="activedate" value="{{ project[7] }}"></td>
+                        <td><input type="text" class="form-control" name="inactivedate" value="{{ project[8] }}"></td>
+                        <td><input type="text" class="form-control" name="minimumtime" value="{{ project[9] }}"></td>
+                        <td><input type="text" class="form-control" name="minimumaltitude" value="{{ project[10] }}"></td>
+                        <td><input type="checkbox" class="form-check-input" name="usecustomhorizon" {% if project[11] %}checked{% endif %}></td>
+                        <td><input type="text" class="form-control" name="horizonoffset" value="{{ project[12] }}"></td>
+                        <td><input type="text" class="form-control" name="meridianwindow" value="{{ project[13] }}"></td>
+                        <td><input type="text" class="form-control" name="filterswitchfrequency" value="{{ project[14] }}"></td>
+                        <td><input type="text" class="form-control" name="ditherevery" value="{{ project[15] }}"></td>
+                        <td><input type="checkbox" class="form-check-input" name="enablegrader" {% if project[16] %}checked{% endif %}></td>
+                        <td><input type="checkbox" class="form-check-input" name="isMosaic" {% if project[17] %}checked{% endif %}></td>
+                        <td><input type="text" class="form-control" name="flatsHandling" value="{{ project[18] }}"></td>
+                       
+                        <td><button type="submit" class="btn btn-primary">Update</button></td>
+                    </form>
+                </form>
+            </tr>
+            <tr>
+                <td colspan="19">
+                    <table class="table table-bordered">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Active</th>
+                                <th>RA</th>
+                                <th>Dec</th>
+                                <th>Epoch Code</th>
+                                <th>Rotation</th>
+                                <th>ROI</th>
+                                <th>Project ID</th>
+                                <th>Override Exposure Order</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for target in targets %}
+                            {% if target[8] == project[0] %}
+                            <tr>
+                                <input type="hidden" class="form-control" name="targetId" value="{{ target[0] }}">
+                                <td><input type="text" class="form-control" name="targetName" value="{{ target[1] }}"></td>
+                                <td><input type="text" class="form-control" name="targetActive" value="{{ target[2] }}"></td>
+                                <td><input type="text" class="form-control" name="targetRa" value="{{ target[2] }}"></td>
+                                <td><input type="text" class="form-control" name="targetDec" value="{{ target[3] }}"></td>
+                                <td><input type="text" class="form-control" name="targetEpochCode" value="{{ target[4] }}"></td>
+                                <td><input type="text" class="form-control" name="targetRotation" value="{{ target[5] }}"></td>
+                                <td><input type="text" class="form-control" name="targetRoi" value="{{ target[6] }}"></td>
+                                <td><input type="text" class="form-control" name="targetProjectId" value="{{ target[7] }}"></td>
+                                <td><input type="text" class="form-control" name="targetOverrideExposureOrder" value="{{ target[8] }}"></td>
+                            </tr>
+                            {% endif %}
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </td>
+            </tr>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>
