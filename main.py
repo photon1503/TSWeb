@@ -2,10 +2,10 @@ import os
 import sqlite3
 from flask import Flask, jsonify, render_template, request, redirect, url_for
 
-from TSprofile import *
-from TSproject import *
-from TStarget import *
-from TSexposureplan import *
+from DTOs.TSprofile import *
+from DTOs.TSproject import *
+from DTOs.TStarget import *
+from DTOs.TSexposureplan import *
 
 app = Flask(__name__)
 

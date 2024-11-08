@@ -8,7 +8,7 @@
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.16/dist/tailwind.min.css" rel="stylesheet">
   <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
   {% block javascript %}
-    <script type="text/javascript" > {% include "script.js" %}</script>
+  <script type="text/javascript"> {% include "script.js" %}</script>
   {% endblock %}
 </head>
 
@@ -60,22 +60,22 @@
         <div>
           <h2 class="text-lg font-medium mb-2">Project Details</h2>
           <div class="space-y-2">
-            <div><span class="font-medium">Name:</span> <span id="project-name">M 81 (1)</span></div>
-            <div><span class="font-medium">Description:</span> <span id="project-description">M 81 (1)</span></div>
-            <div><span class="font-medium">State:</span> <span id="project-state">M 81 (1)</span></div>
-            <div><span class="font-medium">Priority:</span> <span id="project-priority">M 81 (1)</span></div>
-            <div><span class="font-medium">Minimum Time:</span> <span id="project-minimumtime">M 81 (1)</span></div>
-            <div><span class="font-medium">Minimum Altitude:</span> <span id="project-minimumalt">M 81 (1)</span></div>
-            <div><span class="font-medium">Use Custom Horizon:</span> <span id="project-usecustomhorizon">True</span>
+            <div><span class="font-medium">Name:</span> <span id="project-name"></span></div>
+            <div><span class="font-medium">Description:</span> <span id="project-description"></span></div>
+            <div><span class="font-medium">State:</span> <span id="project-state"></span></div>
+            <div><span class="font-medium">Priority:</span> <span id="project-priority"></span></div>
+            <div><span class="font-medium">Minimum Time:</span> <span id="project-minimumtime"></span></div>
+            <div><span class="font-medium">Minimum Altitude:</span> <span id="project-minimumalt"></span></div>
+            <div><span class="font-medium">Use Custom Horizon:</span> <span id="project-usecustomhorizon"></span>
             </div>
-            <div><span class="font-medium">Horizon Offset:</span> <span id="project-horizonoffset">5</span></div>
-            <div><span class="font-medium">Meridian Window:</span> <span id="project-meridianwindow">30</span></div>
+            <div><span class="font-medium">Horizon Offset:</span> <span id="project-horizonoffset"></span></div>
+            <div><span class="font-medium">Meridian Window:</span> <span id="project-meridianwindow"></span></div>
             <div><span class="font-medium">Filter Switch Frequency:</span> <span
-                id="project-filterswitchfrequency">40</span></div>
-            <div><span class="font-medium">Dither After Every:</span> <span id="project-ditherevery">50</span></div>
-            <div><span class="font-medium">Enable Image Grader:</span> <span id="project-enablegrader">True</span></div>
-            <div><span class="font-medium">Mosaic Project:</span> <span id="project-ismosaic">False</span></div>
-            <div><span class="font-medium">Flats Handling:</span> <span id="project-flatshandling">Handling</span></div>
+                id="project-filterswitchfrequency"></span> </div>
+            <div><span class="font-medium">Dither After Every:</span> <span id="project-ditherevery"></span></div>
+            <div><span class="font-medium">Enable Image Grader:</span> <span id="project-enablegrader"></span></div>
+            <div><span class="font-medium">Mosaic Project:</span> <span id="project-ismosaic"></span></div>
+            <div><span class="font-medium">Flats Handling:</span> <span id="project-flatshandling"></span></div>
           </div>
         </div>
       </div>
@@ -83,32 +83,25 @@
 
     <!-- Target -->
     <div id="target" class="flex-1 p-8">
-      <h1 class="text-2xl font-bold mb-4">Target: <span id="target-name">M 81 (1)</span></h1>
+      <h1 class="text-2xl font-bold mb-4">Target: <span id="target-name"></span></h1>
       <div class="grid grid-cols-2 gap-8">
         <div>
           <h2 class="text-lg font-medium mb-2">Target</h2>
           <div class="space-y-2">
+            <div> <span class="font-medium">Name:</span> <span id="target-name">)</span> </div>
             <div>
-              <span class="font-medium">Name:</span> <span id="target-name">M 81 (1)</span>
+              <span class="font-medium">Enabled:</span> <span id="target-enabled" class="clickable"
+                onclick="toggleTargetEnabled()"></span>
+
             </div>
-            <div>
-              <span class="font-medium">Enabled:</span> <span id="target-enabled" class="clickable" onclick="toggleTargetEnabled()">True</span>
-        
-            </div>
-            <div>
-              <span class="font-medium">Coordinates:</span> <span id="target-coordinates">09h 58m 14s, 69° 09' 39"
-                J2000</span>
-            </div>
-            <div>
-              <span class="font-medium">Rotation:</span> <span id="target-rotation">225°</span>
-            </div>
-            <div>
-              <span class="font-medium">ROI:</span> <span id="target-roi">100%</span>
-            </div>
+            <div> <span class="font-medium">Coordinates:</span> <span id="target-coordinates"></span> </div>
+            <div> <span class="font-medium">Rotation:</span> <span id="target-rotation"></span> </div>
+            <div> <span class="font-medium">ROI:</span> <span id="target-roi"></span> </div>
           </div>
         </div>
       </div>
 
+      <!-- Exposures -->
       <div>
         <h2 class="text-lg font-medium mb-2">Exposure Plans</h2>
         <div class="overflow-x-auto">
@@ -124,7 +117,7 @@
               </tr>
             </thead>
             <tbody id="exposure-plans">
-           
+
             </tbody>
           </table>
         </div>
