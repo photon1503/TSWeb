@@ -41,6 +41,7 @@ function showProjectDetails(projectId) {
         document.getElementById('target-rotation').innerText = `${data.target.rotation}°`;
         document.getElementById('target-roi').innerText = `${data.target.roi}%`;
 
+
         exposureTemplates = data.exposureTemplates;
 
         // Update the exposure plans
@@ -49,10 +50,13 @@ function showProjectDetails(projectId) {
         data.exposurePlans.forEach(plan => {
           const template = exposureTemplates.find(t => t.Id === plan.exposureTemplateId);
           const filtername = template ? template.filtername : 'Unknown';
+          templateExposure = template ? template.defaultexposure : 0;
+          
+          templateExposure = `(${templateExposure})`;
           const row = document.createElement('tr');
           row.innerHTML = `
             <td class="px-4 py-2">${filtername}</td>
-            <td class="px-4 py-2">${plan.exposure === -1 ? '(Template)' : plan.exposure}</td>
+            <td class="px-4 py-2">${plan.exposure === -1 ? templateExposure : plan.exposure}</td>
             <td class="px-4 py-2"><input type="number" value="${plan.desired}" onchange="updateExposurePlan(${plan.Id}, 'desired', this.value)"></td>
             <td class="px-4 py-2"><input type="number" value="${plan.accepted}" onchange="updateExposurePlan(${plan.Id}, 'accepted', this.value)"></td> 
             <td class="px-4 py-2">${plan.acquired}</td>   
