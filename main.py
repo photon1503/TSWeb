@@ -1,6 +1,6 @@
 import os
 import sqlite3
-from flask import Flask, render_template, request, redirect, url_for
+from flask import Flask, jsonify, render_template, request, redirect, url_for
 
 from TSprofile import *
 from TSproject import *
@@ -9,10 +9,13 @@ from TSexposureplan import *
 
 app = Flask(__name__)
 
+def db():
+    return sqlite3.connect('schedulerdb.sqlite')
+
 @app.route('/', methods=['GET', 'POST'])
 def index():
     # Connect to the SQLite database
-    conn = sqlite3.connect('schedulerdb.sqlite')
+    conn = db()
     c = conn.cursor()
 
     # Fetch data from the database
@@ -31,7 +34,7 @@ def index():
 
 @app.route('/target/<int:target_id>', methods=['GET'])
 def get_target_details(target_id):
-    conn = sqlite3.connect('schedulerdb.sqlite')
+    conn = db()
     c = conn.cursor()
 
     # Fetch target details
@@ -54,7 +57,7 @@ def get_target_details(target_id):
 
 @app.route('/project/<int:project_id>', methods=['GET'])
 def get_project_details(project_id):
-    conn = sqlite3.connect('schedulerdb.sqlite')
+    conn = db()
     c = conn.cursor()
 
     # Fetch project details
@@ -62,13 +65,24 @@ def get_project_details(project_id):
     project_row = c.fetchone()
     project = TSProject(*project_row) if project_row else None
 
-
-
     conn.close()
 
     return {
         'project': project.__dict__
     }
+
+@app.route('/toggle-target-enabled/<int:target_id>', methods=['POST'])
+def toggle_target_enabled(target_id):
+    data = request.get_json()
+    new_status = data['enabled']
+
+    conn = db()
+    c = conn.cursor()
+    c.execute("UPDATE target SET active = ? WHERE Id = ?", (new_status, target_id))
+    conn.commit()
+    conn.close()
+
+    return jsonify(success=True)
 
 if __name__ == '__main__':
     app.run(debug=True)

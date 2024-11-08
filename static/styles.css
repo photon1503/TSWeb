@@ -1,0 +1,32 @@
+.sidebar {
+    height: 100vh;
+    overflow-y: auto;
+    resize: horizontal;
+    overflow: auto;
+    min-width: 200px;
+    max-width: 400px;
+    position: relative;
+  }
+
+  .resizer {
+    width: 5px;
+    height: 100%;
+    background: #ddd;
+    cursor: ew-resize;
+    position: absolute;
+    right: 0;
+    top: 0;
+  }
+
+  .collapse-toggle {
+    cursor: pointer;
+  }
+
+  .clickable {
+    cursor: pointer;
+    color: blue;
+    text-decoration: underline;
+  }
+  .clickable:hover {
+    color: darkblue;
+  }
