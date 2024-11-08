@@ -1,42 +1,52 @@
-
 # NINA Target Scheduler Web
 
-View and update Target Schedule plans.
+View and update Target Schedule plans for [NINA Scheduler](https://tcpalmer.github.io/nina-scheduler/).
 
-Currently implemented:
-* Toggle status of a project (active / inactive)
-* Change number of desired and accepted images for existing exposure plans
+## Features
 
-![](image.png)
+- Toggle status of a project (active/inactive)
+- Change the number of desired and accepted images for existing exposure plans
 
-# Install
+![Screenshot](image-1.png)
 
-1. Install or update Python from https://www.python.org/downloads
-2. start a Terminal session
-3. change into your favorite directory
-   i.e. ```cd \scripts```
-4. clone repository
-   ```git clone https://github.com/photon1503/TSWeb.git```
-5. change to new directory
-   ```cd TSWeb```
-6. Install requirements
-    ```pip install -r requirements.txt```
-    If you get some error while building astropy library, you might need to download VS Build Tools from https://visualstudio.microsoft.com/de/visual-cpp-build-tools/ or install this astropy manually using   ```pip install astropy[recommended] --upgrade```
+## Installation
 
+1. **Install Python**: Download and install Python from [python.org](https://www.python.org/downloads).
+2. **Open Terminal**: Start a terminal session.
+3. **Navigate to Directory**: Change to your preferred directory, e.g., `cd \scripts`.
+4. **Clone Repository**: Clone the repository using the following command:
+   ```sh
+   git clone https://github.com/photon1503/TSWeb.git
+   ```
 
-# Run
+5. **Change Directory**: Navigate to the newly created directory:
+   ```sh
+   cd TSWeb
+   ```
 
-## Development mode
-```py tsweb.py```
-Go to http://localhost:5000
+6. **Install Requirements**: Install the required packages:
+   ```sh
+   pip install -r requirements.txt
+   ```
+   If you encounter errors while building the astropy library, you may need to download the Visual Studio Build Tools or install astropy manually using:
+   ```sh
+   pip install astropy[recommended] --upgrade
+   ```
 
-## Production mode
-```py tsweb_server.py```
-The port can be modified in tsweb_server.py,
+## Running the Application
+### Development Mode
+To run the application in development mode, use the following command:
+```sh
+py tsweb.py
+```
+Then, open your browser and go to http://localhost:5000.
 
-Go to http://localhost:8081
-or ```http://<ip of your observatory pc>:8081```
+### Production Mode
+To run the application in production mode, use the following command:
+```sh
+py tsweb_server.py
+```
+The port can be modified in tsweb_server.py. Open your browser and go to http://localhost:8081 or http://\<ip-of-your-observatory-pc\>:8081.
 
-# Known issues
-
-* No support for multiple profiles
+## Known Issues
+- No support for multiple profiles
