@@ -5,7 +5,7 @@ View and update Target Schedule plans.
 
 Currently implemented:
 * Toggle status of a project (active / inactive)
-* Change desired and accepted images for exposure plans
+* Change number of desired and accepted images for existing exposure plans
 
 ![](image.png)
 
