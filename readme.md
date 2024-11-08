@@ -22,8 +22,7 @@ Currently implemented:
 6. Install requirements
     ```pip install -r requirements.txt```
     If you get some error while building astropy library, you might need to download VS Build Tools from https://visualstudio.microsoft.com/de/visual-cpp-build-tools/ or install this astropy manually using   ```pip install astropy[recommended] --upgrade```
-7. Start program
-   see next chapter
+
 
 # Run
 
@@ -32,12 +31,12 @@ Currently implemented:
 Go to http://localhost:5000
 
 ## Production mode
-```py tsweb_serve.py```
-The port can be modified in tsweb_serve,
+```py tsweb_server.py```
+The port can be modified in tsweb_server.py,
 
 Go to http://localhost:8081
 or ```http://<ip of your observatory pc>:8081```
 
 # Known issues
 
-* Different profiles can't be selected
+* No support for multiple profiles
